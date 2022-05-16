@@ -1,26 +1,33 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+<home-page />
+  <!-- <label for="" class="text-red-500">Upload file</label>
+  <input @change="getFile" type="file" name="" id="" />
+  <button @click="upload">Upload to storage</button> -->
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, uploadBytes } from 'firebase/storage'
+import { storage } from '../firebase'
+import HomePage from './pages/HomePage.vue'
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  name: "App",
+  components: {HomePage},
+  data() {
+    return {
+      uploadedSong: null,
+      // audioRef: ref(storage, `songs/`)
+    };
+  },
+  methods: {
+    getFile(e) {
+      this.uploadedSong = e.target.files[0]
+      console.log(e.target.files[0]);
+    },
+    upload(){
+      uploadBytes(ref(storage, `songs/${this.uploadedSong.name}`), this.uploadedSong).then(()=> alert("uploaded!"))
+    }
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
